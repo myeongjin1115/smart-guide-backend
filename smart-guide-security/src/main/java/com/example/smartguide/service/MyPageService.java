@@ -24,6 +24,7 @@ public class MyPageService {
 	private GroupMapper groupMapper;
 	
 	public MyPageRes getUserInfo(String token) {
+		token = token.substring(7);
 		String username = jwtTokenUtil.getUsernameFromToken(token);
 		
 		Member member = memberMapper.selectUserByUsername(username).orElseThrow(RuntimeException::new);

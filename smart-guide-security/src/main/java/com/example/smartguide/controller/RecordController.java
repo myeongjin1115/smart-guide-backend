@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.smartguide.config.JwtTokenUtil;
-import com.example.smartguide.dto.LongToJson;
+import com.example.smartguide.dto.RecordPostRes;
 import com.example.smartguide.dto.RecordReq;
 import com.example.smartguide.dto.RecordRes;
 import com.example.smartguide.model.Building;
@@ -58,10 +58,10 @@ public class RecordController {
 	}
 	
 	@PostMapping("")
-	public LongToJson createUserRecord(@RequestHeader(value = "Authorization") String token, @RequestBody RecordReq recordReq) {
+	public RecordPostRes createUserRecord(@RequestHeader(value = "Authorization") String token, @RequestBody RecordReq recordReq) {
 		token = token.substring(7);
 		recordService.setRecord(token, recordReq);
-		LongToJson longToJson = new LongToJson();
+		RecordPostRes longToJson = new RecordPostRes();
 		longToJson.setLastNoticeId(noticeService.getLastNoticeId(token, recordReq));
 		System.out.println(recordReq.getUuid() + "  /  " + recordReq.getMajor()+ "  /  "  + recordReq.getMinor()+ "  /  "  + recordReq.getCreatedAt());
 		return longToJson;

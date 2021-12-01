@@ -31,11 +31,6 @@ public class NoticeController {
 		return noticeService.getGroupNotices(userId);
 	}
 	
-	/*@GetMapping("/building")
-	public List<Notice> getBuildingNotices(@RequestParam("buildingId") Long buildingId, @RequestParam("userId") Long userId) {
-		return noticeService.getBuildingNotices(buildingId, userId);
-	}*/
-	
 	@GetMapping("/building/{buildingId}")
     public List<Notice> getBuildingNotices(@RequestHeader("Authorization") String token, @PathVariable("buildingId") Long buildingId) {
         token = token.substring(7);

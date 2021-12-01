@@ -33,7 +33,7 @@ public class RecordController {
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 	
-	// 誘몄궗�슜
+	// 미사용
 	@GetMapping("/user/{userId}")
 	public List<Record> readUserRecords(@PathVariable("userId") Long userId) {
 		return recordService.getUserRecords(userId);
@@ -51,7 +51,7 @@ public class RecordController {
 		return recordService.getBuildingRecords(buildingId);
 	}
 	
-	// 誘몄궗�슜
+	// 미사용
 	@GetMapping("/all")
 	public List<Record> readAllRecords() {
 		return recordService.getAllRecords();

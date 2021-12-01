@@ -16,11 +16,19 @@ public interface NoticeMapper {
 			+ " (SELECT notice_id FROM notice_and_group WHERE group_id=#{groupId})")
 	List<Notice> selectNoticeByGroupId(@Param("groupId") Long groupId);
 
-	@Select("SELECT * FROM notice WHERE id IN"
+	/*@Select("SELECT * FROM notice WHERE id IN"
 			+ " (SELECT DISTINCT notice_id FROM notice_and_group WHERE group_id=(SELECT group_id FROM user WHERE id=#{userId}) AND group_id IN"
 			+ " (SELECT group_id FROM building_and_group WHERE building_id=#{buildingId}"
 			+ "))")
-	List<Notice> selectNoticesByBuildingIdAndUserId(@Param("buildingId") Long buildingId, @Param("userId") Long userId);
+	List<Notice> selectNoticesByBuildingIdAndUserId(@Param("buildingId") Long buildingId, @Param("userId") Long userId);*/
+	
+	@Select("SELECT DISTINCT notice.* FROM notice, notice_and_group, building_and_group, user\r\n"
+			+ " WHERE building_and_group.building_id=#{buildingId}\r\n"
+			+ " AND notice_and_group.group_id=building_and_group.group_id\r\n"
+			+ " AND (notice.is_public=1 OR user.username=#{username} AND user.group_id=notice_and_group.group_id)\r\n"
+			+ " AND notice.id=notice_and_group.notice_id\r\n"
+			+ " ORDER BY id ASC")
+    List<Notice> selectNoticesByBuildingIdAndUsername(@Param("buildingId") Long buildingId, @Param("username") String username);
 	
 	@Select("SELECT notice.id FROM notice, notice_and_group, building_and_group"
 			+ " WHERE building_and_group.building_id=#{buildingId}"

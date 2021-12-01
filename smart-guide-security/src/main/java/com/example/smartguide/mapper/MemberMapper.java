@@ -42,4 +42,6 @@ public interface MemberMapper {
 			+ " #{signUpReq.groupId})")
 	int insertUser(@Param("signUpReq") SignUpReq signUpReq);
 	
+	@Insert("INSERT INTO user(username, password, group_id) VALUES(#{username}, #{password}, #{groupId})")
+	int insertNormalUser(@Param("username") String username, @Param("password") String password, @Param("groupId") Long groupId);
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.smartguide.config.JwtTokenUtil;
+import com.example.smartguide.dto.LongToJson;
 import com.example.smartguide.dto.RecordReq;
 import com.example.smartguide.dto.RecordRes;
 import com.example.smartguide.model.Building;
@@ -32,7 +33,7 @@ public class RecordController {
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 	
-	// 미사용
+	// 誘몄궗�슜
 	@GetMapping("/user/{userId}")
 	public List<Record> readUserRecords(@PathVariable("userId") Long userId) {
 		return recordService.getUserRecords(userId);
@@ -50,17 +51,20 @@ public class RecordController {
 		return recordService.getBuildingRecords(buildingId);
 	}
 	
-	// 미사용
+	// 誘몄궗�슜
 	@GetMapping("/all")
 	public List<Record> readAllRecords() {
 		return recordService.getAllRecords();
 	}
 	
 	@PostMapping("")
-	public Long createUserRecord(@RequestHeader(value = "Authorization") String token, @RequestBody RecordReq recordReq) {
+	public LongToJson createUserRecord(@RequestHeader(value = "Authorization") String token, @RequestBody RecordReq recordReq) {
 		token = token.substring(7);
 		recordService.setRecord(token, recordReq);
-		return noticeService.getLastNoticeId(token, recordReq);
+		LongToJson longToJson = new LongToJson();
+		longToJson.setLastNoticeId(noticeService.getLastNoticeId(token, recordReq));
+		System.out.println(recordReq.getUuid() + "  /  " + recordReq.getMajor()+ "  /  "  + recordReq.getMinor()+ "  /  "  + recordReq.getCreatedAt());
+		return longToJson;
 	}
 	
 }

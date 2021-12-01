@@ -61,10 +61,10 @@ public class RecordController {
 	public RecordPostRes createUserRecord(@RequestHeader(value = "Authorization") String token, @RequestBody RecordReq recordReq) {
 		token = token.substring(7);
 		recordService.setRecord(token, recordReq);
-		RecordPostRes longToJson = new RecordPostRes();
-		longToJson.setLastNoticeId(noticeService.getLastNoticeId(token, recordReq));
+		RecordPostRes recordPostRes = new RecordPostRes();
+		recordPostRes.setLastNoticeId(noticeService.getLastNoticeId(token, recordReq));
 		System.out.println(recordReq.getUuid() + "  /  " + recordReq.getMajor()+ "  /  "  + recordReq.getMinor()+ "  /  "  + recordReq.getCreatedAt());
-		return longToJson;
+		return recordPostRes;
 	}
 	
 }

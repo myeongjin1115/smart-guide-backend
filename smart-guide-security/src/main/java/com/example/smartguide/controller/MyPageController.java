@@ -17,7 +17,8 @@ public class MyPageController {
 	private MyPageService myPageService;
 	
 	@GetMapping("")
-	public MyPageRes getMyPage(@RequestHeader("token") String token) {
+	public MyPageRes getMyPage(@RequestHeader("Authorization") String token) {
+		token = token.substring(7);
 		return myPageService.getUserInfo(token);
 	}
 	

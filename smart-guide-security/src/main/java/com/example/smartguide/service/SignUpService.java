@@ -11,13 +11,12 @@ import com.example.smartguide.mapper.MemberMapper;
 @Service
 public class SignUpService {
 	
-	//@Autowired
-	//private MemberMapper userMapper;
-	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
 	@Autowired
 	private MemberMapper memberMapper;
+	
 	@Autowired
 	private GroupMapper groupMapper;
 
@@ -29,10 +28,5 @@ public class SignUpService {
 	    Long groupId = groupMapper.selectGroupIdByLargeAndMediumAndSmall(signUpReq);
 	    memberMapper.insertNormalUser(signUpReq.getUsername(), signUpReq.getPassword(), groupId);
 	}
-	
-	/*public void signup(SignUpReq signUpReq) {
-		signUpReq.setPassword(passwordEncoder.encode(signUpReq.getPassword()));
-		userMapper.insertUser(signUpReq);
-	}*/
 	
 }

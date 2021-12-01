@@ -19,9 +19,6 @@ public interface RecordMapper {
 	@Select("SELECT * FROM record WHERE user_id=#{userId}")
 	List<Record> selectUserRecord(@Param("userId") Long userId);
 	
-//	@Select("SELECT * FROM record WHERE beacon_id=(SELECT beacon.id FROM beacon WHERE beacon.building_id=#{buildingId})")
-//	List<Record> selectBuildingRecord(@Param("buildingId") Long buildingId);
-	
 	@Select("SELECT user.username, building.name AS building_name, record.created_at"
 			+ " FROM user, building, beacon, record"
 			+ " WHERE building.id=#{buildingId}"

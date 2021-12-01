@@ -34,10 +34,6 @@ public class NoticeService {
 		return noticeMapper.selectNoticeByGroupId(user.getGroupId());
 	}
 	
-	/*public List<Notice> getBuildingNotices(Long buildingId, Long userId) {
-		return noticeMapper.selectNoticesByBuildingIdAndUserId(buildingId, userId);
-	}*/
-	
 	public List<Notice> getBuildingNotices(Long buildingId, String username) {
         return noticeMapper.selectNoticesByBuildingIdAndUsername(buildingId, username);
     }

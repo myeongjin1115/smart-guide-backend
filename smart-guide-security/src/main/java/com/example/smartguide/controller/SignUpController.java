@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.smartguide.dto.SignResponse;
 import com.example.smartguide.dto.SignUpReq;
 import com.example.smartguide.service.SignUpService;
 
@@ -17,8 +18,12 @@ public class SignUpController {
 	private SignUpService signUpService;
 	
 	@PostMapping("")
-	public void singup(@RequestBody SignUpReq signUpReq) {
+	public SignResponse singup(@RequestBody SignUpReq signUpReq) {
+		SignResponse signResponse = new SignResponse();
 		signUpService.signup(signUpReq);
+		signResponse.setAnswer("test");
+		
+		return signResponse; 
 	}
 	
 }

@@ -34,9 +34,13 @@ public class NoticeService {
 		return noticeMapper.selectNoticeByGroupId(user.getGroupId());
 	}
 	
-	public List<Notice> getBuildingNotices(Long buildingId, Long userId) {
+	/*public List<Notice> getBuildingNotices(Long buildingId, Long userId) {
 		return noticeMapper.selectNoticesByBuildingIdAndUserId(buildingId, userId);
-	}
+	}*/
+	
+	public List<Notice> getBuildingNotices(Long buildingId, String username) {
+        return noticeMapper.selectNoticesByBuildingIdAndUsername(buildingId, username);
+    }
 	
 	public Long getLastNoticeId(String token, RecordReq recordReq) {
 		String username = jwtTokenUtil.getUsernameFromToken(token);

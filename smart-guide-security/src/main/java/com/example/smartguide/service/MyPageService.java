@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.smartguide.config.JwtTokenUtil;
-import com.example.smartguide.dto.GroupInfo;
 import com.example.smartguide.dto.MyPageRes;
 import com.example.smartguide.mapper.GroupMapper;
 import com.example.smartguide.mapper.MemberMapper;
@@ -24,21 +23,18 @@ public class MyPageService {
 	private GroupMapper groupMapper;
 	
 	public MyPageRes getUserInfo(String token) {
-		token = token.substring(7);
 		String username = jwtTokenUtil.getUsernameFromToken(token);
 		
-		Member member = memberMapper.selectUserByUsername(username).orElseThrow(RuntimeException::new);
+		Member user = memberMapper.selectUserByUsername(username).orElseThrow(RuntimeException::new);
 		
-		Group group = groupMapper.selectGroupById(member.getGroupId());
+		Group group = groupMapper.selectGroupById(user.getGroupId());
 		
 		MyPageRes myPageRes = new MyPageRes();
 		myPageRes.setUsername(username);
-		myPageRes.setRole(member.getRole().name());
-		GroupInfo groupInfo = new GroupInfo();
-		groupInfo.setLarge(group.getLargeName());
-		groupInfo.setMedium(group.getMediumName());
-		groupInfo.setSmall(group.getSmallName());
-		myPageRes.setGroup(groupInfo);
+		myPageRes.setAuthority(user.getRole().name());
+		myPageRes.setGroupName(group.getLargeName() + " > "
+							+ group.getMediumName() + " > "
+							+ group.getSmallName());
 		
 		return myPageRes;
 	}

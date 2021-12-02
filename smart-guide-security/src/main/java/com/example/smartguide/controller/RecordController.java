@@ -17,7 +17,6 @@ import com.example.smartguide.dto.RecordReq;
 import com.example.smartguide.dto.RecordRes;
 import com.example.smartguide.model.Building;
 import com.example.smartguide.model.Record;
-import com.example.smartguide.service.NoticeService;
 import com.example.smartguide.service.RecordService;
 
 @RestController
@@ -26,9 +25,6 @@ public class RecordController {
 
 	@Autowired
 	private RecordService recordService;
-	
-	@Autowired
-	private NoticeService noticeService;
 	
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -60,10 +56,7 @@ public class RecordController {
 	@PostMapping("")
 	public RecordPostRes createUserRecord(@RequestHeader(value = "Authorization") String token, @RequestBody RecordReq recordReq) {
 		token = token.substring(7);
-		recordService.setRecord(token, recordReq);
-		RecordPostRes recordPostRes = new RecordPostRes();
-		recordPostRes.setLastNoticeId(noticeService.getLastNoticeId(token, recordReq));
-		return recordPostRes;
+		return recordService.setRecord(token, recordReq);
 	}
 	
 }

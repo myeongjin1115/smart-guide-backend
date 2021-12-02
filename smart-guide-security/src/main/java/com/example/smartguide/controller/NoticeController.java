@@ -26,6 +26,7 @@ public class NoticeController {
 	@Autowired
     private JwtTokenUtil jwtTokenUtil;
 	
+	// 앱 미구현
 	@GetMapping("/group")
 	public List<Notice> getGroupNotices(@RequestParam("userId") Long userId) {
 		return noticeService.getGroupNotices(userId);

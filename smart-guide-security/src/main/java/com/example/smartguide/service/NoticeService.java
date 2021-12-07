@@ -6,10 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.smartguide.config.JwtTokenUtil;
+import com.example.smartguide.dto.NoticePostReq;
 import com.example.smartguide.dto.RecordReq;
 import com.example.smartguide.mapper.BuildingMapper;
+import com.example.smartguide.mapper.GroupMapper;
 import com.example.smartguide.mapper.MemberMapper;
 import com.example.smartguide.mapper.NoticeMapper;
+import com.example.smartguide.model.Group;
 import com.example.smartguide.model.Member;
 import com.example.smartguide.model.Notice;
 
@@ -26,7 +29,14 @@ public class NoticeService {
 	private BuildingMapper buildingMapper;
 	
 	@Autowired
+	private GroupMapper groupMapper;
+	
+	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+	
+	public List<Group> getGroups(String username) {
+		return groupMapper.selectGroupByLargeNameAndUsername(username);
+	}
 	
 	public List<Notice> getGroupNotices(Long userId) {
 		Member user = memberMapper.selectUser(userId);
@@ -46,8 +56,20 @@ public class NoticeService {
 		return result;
 	}
 	
-	public void setNotice(Notice notice) {
+	public void setNotice(String username, NoticePostReq noticePostReq) {
+		Member member = memberMapper.selectUserByUsername(username).orElseThrow(RuntimeException::new);
+		List<Long> groupIds = noticePostReq.getGroupIds();
+		Notice notice = Notice.builder()
+				.title(noticePostReq.getTitle())
+				.content(noticePostReq.getContent())
+				.isPublic(noticePostReq.getIsPublic())
+				.userId(member.getId())
+				.build();
+		
 		noticeMapper.insertNotice(notice);
+		for(Long groupId : groupIds) {
+			noticeMapper.insertNoticeAndGroup(notice.getId(), groupId);
+		}
 	}
 	
 }

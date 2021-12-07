@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -33,7 +34,11 @@ public interface NoticeMapper {
 			+ " LIMIT 1")
 	Long selectLatestNoticeIdByBuilding(@Param("groupId") Long groupId, @Param("buildingId") Long buildingId);
 	
-	@Insert("INSERT INTO notice(title, content, is_pubilc) VALUES(#{notice.title}, #{notice.content}, #{notice.isPublic})")
+	@Insert("INSERT INTO notice(title, content, is_public, user_id) VALUES(#{notice.title}, #{notice.content}, #{notice.isPublic}, #{notice.userId})")
+	@Options(useGeneratedKeys=true, keyProperty="id")
 	int insertNotice(@Param("notice") Notice notice);
+	
+	@Insert("INSERT INTO notice_and_group(notice_id, group_id) VALUES(#{noticeId}, #{groupId})")
+	int insertNoticeAndGroup(@Param("noticeId") Long noticeId, @Param("groupId") Long groupId);
 	
 }

@@ -11,6 +11,7 @@ import com.example.smartguide.model.Building;
 @Mapper
 public interface BuildingMapper {
 	
+	// 비콘 정보를 이용하여 비콘이 속한 빌딩 id를 가져옴
 	@Select("SELECT building_id FROM beacon WHERE uuid=#{uuid} AND major=#{major} AND minor=#{minor}")
 	Long selectBuildingIdByUuidAndMajorAndMinor(@Param("uuid") String uuid, @Param("major") String major, @Param("minor") String minor);
 	
@@ -24,5 +25,13 @@ public interface BuildingMapper {
 			+ " AND user.group_id=group.id"
 			+ ")")
 	List<Building> selectBuildingByUsername(@Param("username") String username);
+	
+	// 해당 유저가 속한 그룹의 대그룹에 속한 그룹들의 빌딩 Id 들을 가져옴
+	@Select("SELECT * FROM building WHERE id"
+			+ " IN (SELECT building_id FROM building_and_group WHERE group_id"
+			+ " IN (SELECT id FROM `group` WHERE large_name="
+			+ "(SELECT large_name FROM `group` WHERE id="
+			+ "(SELECT group_id FROM user WHERE username=#{username}))))")
+	List<Building> selectBuildingIdsByUsername(@Param("username") String username);
 	
 }

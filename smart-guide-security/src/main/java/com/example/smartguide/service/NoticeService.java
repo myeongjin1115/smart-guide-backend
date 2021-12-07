@@ -38,10 +38,10 @@ public class NoticeService {
 		return groupMapper.selectGroupByLargeNameAndUsername(username);
 	}
 	
-	public List<Notice> getGroupNotices(Long userId) {
-		Member user = memberMapper.selectUser(userId);
+	public List<Notice> getGroupNotices(String username) {
+		Member member = memberMapper.selectUserByUsername(username).orElseThrow(RuntimeException::new);
 		
-		return noticeMapper.selectNoticeByGroupId(user.getGroupId());
+		return noticeMapper.selectNoticeByGroupId(member.getGroupId());
 	}
 	
 	public List<Notice> getBuildingNotices(Long buildingId, String username) {

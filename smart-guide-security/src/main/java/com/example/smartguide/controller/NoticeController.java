@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.smartguide.config.JwtTokenUtil;
@@ -36,10 +35,12 @@ public class NoticeController {
 		return noticeService.getGroups(username);
 	}
 	
-	// 
+	// 해당 유저가 속한 그룹의 공지사항을 반환
 	@GetMapping("/group")
-	public List<Notice> getGroupNotices(@RequestParam("userId") Long userId) {
-		return noticeService.getGroupNotices(userId);
+	public List<Notice> getGroupNotices(@RequestHeader("Authorization") String token) {
+		token = token.substring(7);
+		String username = jwtTokenUtil.getUsernameFromToken(token);
+		return noticeService.getGroupNotices(username);
 	}
 	
 	// 유저가 빌딩 진입 시, 유저의 그룹을 확인하고 해당 빌딩의 공지사항을 반환함

@@ -67,8 +67,10 @@ public class NoticeService {
 				.build();
 		
 		noticeMapper.insertNotice(notice);
-		for(Long groupId : groupIds) {
-			noticeMapper.insertNoticeAndGroup(notice.getId(), groupId);
+		if(noticePostReq.getIsPublic() == false) {
+			for(Long groupId : groupIds) {
+				noticeMapper.insertNoticeAndGroup(notice.getId(), groupId);
+			}
 		}
 	}
 	

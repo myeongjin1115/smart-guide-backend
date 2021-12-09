@@ -20,44 +20,36 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-	
+
 	@Autowired
 	private UserDetailsService userDetailsService;
-	
+
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
-	
+
 	@Autowired
 	private DataSource dataSource;
-	
+
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
-	    return new BCryptPasswordEncoder();
+		return new BCryptPasswordEncoder();
 	}
-	
+
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.jdbcAuthentication().dataSource(dataSource);
-		auth
-			.userDetailsService(userDetailsService)
-			.passwordEncoder(passwordEncoder());
-	}	
-	
+		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+	}
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
-			.csrf().disable()
-			.authorizeRequests().antMatchers("/login/**", "/signup/**").permitAll()
+		http.csrf().disable().authorizeRequests().antMatchers("/login/**", "/signup/**").permitAll()
 //			.antMatchers("/record/all").hasRole("MANAGER")
-			.anyRequest().authenticated()
-			.and()
-			.exceptionHandling()
-			.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-			.and()
-			.sessionManagement()
-			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		
+				.anyRequest().authenticated().and().exceptionHandling()
+				.authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
-	
+
 }

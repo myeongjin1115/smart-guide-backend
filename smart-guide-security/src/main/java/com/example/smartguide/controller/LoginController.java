@@ -19,15 +19,16 @@ public class LoginController {
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
-	
+
 	@Autowired
 	private JwtUserDetailsService userDetailsService;
-	
+
 	@PostMapping("")
 	public ResponseEntity<?> login(@RequestBody LoginReq loginReq) {
-		final Member member = userDetailsService.authenticationByUsernameAndPassword(loginReq.getUsername(), loginReq.getPassword());
+		final Member member = userDetailsService.authenticationByUsernameAndPassword(loginReq.getUsername(),
+				loginReq.getPassword());
 		final String token = jwtTokenUtil.generateToken(member.getUsername());
 		return ResponseEntity.ok(new LoginRes(token));
 	}
-	
+
 }

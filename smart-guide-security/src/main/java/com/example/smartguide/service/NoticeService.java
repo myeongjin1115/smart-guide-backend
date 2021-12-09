@@ -15,6 +15,7 @@ import com.example.smartguide.mapper.NoticeMapper;
 import com.example.smartguide.model.Group;
 import com.example.smartguide.model.Member;
 import com.example.smartguide.model.Notice;
+import com.example.smartguide.model.Role;
 
 @Service
 public class NoticeService {
@@ -40,7 +41,9 @@ public class NoticeService {
 	
 	public List<Notice> getGroupNotices(String username) {
 		Member member = memberMapper.selectUserByUsername(username).orElseThrow(RuntimeException::new);
-		
+		if(member.getRole() == Role.ROLE_MANAGER) {
+			return noticeMapper.selectNoticesByManagerGroupId(member.getGroupId());
+		}
 		return noticeMapper.selectNoticeByGroupId(member.getGroupId());
 	}
 	

@@ -15,11 +15,11 @@ public class MyPageController {
 
 	@Autowired
 	private MyPageService myPageService;
-	
+
 	@GetMapping("")
 	public MyPageRes getMyPage(@RequestHeader("Authorization") String token) {
 		token = token.substring(7);
 		return myPageService.getUserInfo(token);
 	}
-	
+
 }

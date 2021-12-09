@@ -12,33 +12,48 @@ import com.example.smartguide.model.Notice;
 
 @Mapper
 public interface NoticeMapper {
-	
-	@Select("SELECT * FROM notice WHERE id IN"
-			+ " (SELECT notice_id FROM notice_and_group WHERE group_id=#{groupId})")
+
+	@Select("SELECT * FROM notice WHERE id IN" + " (SELECT notice_id FROM notice_and_group WHERE group_id=#{groupId})")
 	List<Notice> selectNoticeByGroupId(@Param("groupId") Long groupId);
-	
+
+	@Select("SELECT COUNT(*) FROM notice WHERE id IN"
+			+ " (SELECT notice_id FROM notice_and_group WHERE group_id=#{groupId})")
+	int selectNoticeCountByGroupId(@Param("groupId") Long groupId);
+
+	@Select("SELECT * FROM notice WHERE id IN \r\n"
+			+ "(SELECT DISTINCT notice_id FROM notice_and_group WHERE group_id IN \r\n"
+			+ "(SELECT id FROM `group` WHERE large_name=\r\n"
+			+ "(SELECT large_name FROM `group` WHERE id=#{groupId})))")
+	List<Notice> selectNoticesByManagerGroupId(@Param("groupId") Long groupId);
+
 	@Select("SELECT DISTINCT notice.* FROM notice, notice_and_group, building_and_group, user"
 			+ " WHERE building_and_group.building_id=#{buildingId}"
 			+ " AND notice_and_group.group_id=building_and_group.group_id"
 			+ " AND (notice.is_public=1 OR user.username=#{username} AND user.group_id=notice_and_group.group_id)"
-			+ " AND notice.id=notice_and_group.notice_id"
-			+ " ORDER BY id ASC")
-    List<Notice> selectNoticesByBuildingIdAndUsername(@Param("buildingId") Long buildingId, @Param("username") String username);
-	
+			+ " AND notice.id=notice_and_group.notice_id" + " ORDER BY id ASC")
+	List<Notice> selectNoticesByBuildingIdAndUsername(@Param("buildingId") Long buildingId,
+			@Param("username") String username);
+
+	@Select("SELECT COUNT(DISTINCT notice.id) FROM notice, notice_and_group, building_and_group, user"
+			+ " WHERE building_and_group.building_id=#{buildingId}"
+			+ " AND notice_and_group.group_id=building_and_group.group_id"
+			+ " AND (notice.is_public=1 OR user.username=#{username} AND user.group_id=notice_and_group.group_id)"
+			+ " AND notice.id=notice_and_group.notice_id")
+	int selectNoticesCountByBuildingIdAndUsername(@Param("buildingId") Long buildingId,
+			@Param("username") String username);
+
 	@Select("SELECT notice.id FROM notice, notice_and_group, building_and_group"
 			+ " WHERE building_and_group.building_id=#{buildingId}"
-			+ " AND building_and_group.group_id=notice_and_group.group_id"
-			+ " AND notice_and_group.notice_id=notice.id"
-			+ " AND (notice.is_public=1 OR notice_and_group.group_id=#{groupId})"
-			+ " ORDER BY notice.id DESC"
+			+ " AND building_and_group.group_id=notice_and_group.group_id" + " AND notice_and_group.notice_id=notice.id"
+			+ " AND (notice.is_public=1 OR notice_and_group.group_id=#{groupId})" + " ORDER BY notice.id DESC"
 			+ " LIMIT 1")
 	Long selectLatestNoticeIdByBuilding(@Param("groupId") Long groupId, @Param("buildingId") Long buildingId);
-	
+
 	@Insert("INSERT INTO notice(title, content, is_public, user_id) VALUES(#{notice.title}, #{notice.content}, #{notice.isPublic}, #{notice.userId})")
-	@Options(useGeneratedKeys=true, keyProperty="id")
+	@Options(useGeneratedKeys = true, keyProperty = "id")
 	int insertNotice(@Param("notice") Notice notice);
-	
+
 	@Insert("INSERT INTO notice_and_group(notice_id, group_id) VALUES(#{noticeId}, #{groupId})")
 	int insertNoticeAndGroup(@Param("noticeId") Long noticeId, @Param("groupId") Long groupId);
-	
+
 }

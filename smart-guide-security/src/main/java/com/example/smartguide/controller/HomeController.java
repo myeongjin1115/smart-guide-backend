@@ -15,18 +15,18 @@ import com.example.smartguide.service.HomeService;
 @RestController
 @RequestMapping("/home")
 public class HomeController {
-	
+
 	@Autowired
 	private HomeService homeService;
-	
+
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
-	
+
 	@GetMapping("/manager")
 	public List<ManagerHomeRes> managerHomePage(@RequestHeader("Authorization") String token) {
 		token = token.substring(7);
 		String username = jwtTokenUtil.getUsernameFromToken(token);
 		return homeService.RecordCount(username);
 	}
-	
+
 }

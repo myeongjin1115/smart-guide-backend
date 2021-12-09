@@ -25,38 +25,39 @@ public class RecordController {
 
 	@Autowired
 	private RecordService recordService;
-	
+
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
-	
+
 	// 미사용
 	@GetMapping("/user/{userId}")
 	public List<Record> readUserRecords(@PathVariable("userId") Long userId) {
 		return recordService.getUserRecords(userId);
 	}
-	
+
 	@GetMapping("/building")
 	public List<Building> readBuilding(@RequestHeader("Authorization") String token) {
 		token = token.substring(7);
 		String username = jwtTokenUtil.getUsernameFromToken(token);
 		return recordService.getBuildingListByUsername(username);
 	}
-	
+
 	@GetMapping("/building/{buildingId}")
 	public List<RecordRes> readBuildingRecords(@PathVariable("buildingId") Long buildingId) {
 		return recordService.getBuildingRecords(buildingId);
 	}
-	
+
 	// 미사용
 	@GetMapping("/all")
 	public List<Record> readAllRecords() {
 		return recordService.getAllRecords();
 	}
-	
+
 	@PostMapping("")
-	public RecordPostRes createUserRecord(@RequestHeader(value = "Authorization") String token, @RequestBody RecordReq recordReq) {
+	public RecordPostRes createUserRecord(@RequestHeader(value = "Authorization") String token,
+			@RequestBody RecordReq recordReq) {
 		token = token.substring(7);
 		return recordService.setRecord(token, recordReq);
 	}
-	
+
 }

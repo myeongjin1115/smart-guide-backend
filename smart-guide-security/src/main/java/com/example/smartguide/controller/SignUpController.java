@@ -13,17 +13,17 @@ import com.example.smartguide.service.SignUpService;
 @RestController
 @RequestMapping("/signup")
 public class SignUpController {
-	
+
 	@Autowired
 	private SignUpService signUpService;
-	
+
 	@PostMapping("")
 	public SignUpRes singup(@RequestBody SignUpReq signUpReq) {
 		SignUpRes signUpRes = new SignUpRes();
 		signUpService.signup(signUpReq);
 		signUpRes.setAnswer("SignUp Success!");
-		
+
 		return signUpRes;
 	}
-	
+
 }
